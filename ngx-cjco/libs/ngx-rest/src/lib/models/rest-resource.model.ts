@@ -1,6 +1,6 @@
 export abstract class RestResource<T, IdType extends number | string = number | string> {
   public abstract get id(): IdType;
-  protected constructor(object?: Partial<T>) {
+  public constructor(object?: Partial<T>) {
     Object.assign(this, object);
   }
 

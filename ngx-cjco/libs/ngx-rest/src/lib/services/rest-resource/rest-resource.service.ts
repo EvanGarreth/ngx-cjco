@@ -35,7 +35,6 @@ export abstract class RestResourceService<
     }
 
     this.resourceInstance = new resource.type() as T;
-
     this.endpointConfig = this.resourceUrlService.getEndpoint(resource.resourceName);
     this.isVersioned = this.endpointConfig.versions !== undefined && this.endpointConfig.versions?.length > 0;
     this.versioningConfig = new Map<string, string>();
@@ -81,14 +80,14 @@ export abstract class RestResourceService<
   public update(item: T, options?: RestRequestOptions<T>): Observable<T | T[]> {
     const preparedUrl = `${this.prepareUrl(options)}/${item.id}`;
     console.table([preparedUrl, item]);
-    return this.httpClient.post<T>(preparedUrl, item).pipe(
+    return this.httpClient.put<T>(preparedUrl, item).pipe(
       map((data: T) => new this.type().fromJson(data))
     );
   }
 
-  public delete(options?: RestRequestOptions<T>): void {
-    const preparedUrl = this.prepareUrl(options);
-    this.httpClient.delete<T>(preparedUrl);
+  public delete(item: T, options?: RestRequestOptions<T>): Observable<T> {
+    const preparedUrl = `${this.prepareUrl(options)}/${item.id}`;
+    return this.httpClient.delete<T>(preparedUrl);
   }
 
   private prepareUrl(options?: RestRequestOptions<T>): string {
